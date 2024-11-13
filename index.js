@@ -20,10 +20,12 @@ const frag = `#version 300 es
 
     in vec2 vTexCoord;
     uniform sampler2D uTexture;
+    uniform sampler2D uDepth;
+    uniform vec2 mousePos;
 
     void main() {
         //fragColor = vec4(0.3, 0.4, 0.9, 1);
-       fragColor = texture(uTexture, vTexCoord);
+       fragColor = texture(uTexture, mousePos * vTexCoord);
     }
 `;
 
@@ -85,6 +87,11 @@ function canvasInit() {
     return;
   }
 
+  canvas.addEventListener("mousemove", (mouse) => {
+    const mousePos = gl.getUniformLocation(program, "mousePos");
+    gl.uniform2f(mousePos, mouse.x, mouse.y);
+  });
+
   const vertexShader = createShader(gl, gl.VERTEX_SHADER, vert);
   const fragmentShader = createShader(gl, gl.FRAGMENT_SHADER, frag);
   const program = createProgram(gl, [vertexShader, fragmentShader]);
@@ -134,6 +141,18 @@ function canvasInit() {
   );
   gl.bindTexture(gl.TEXTURE_2D, null);
 
+  // var depthTexture = gl.createTexture();
+  // gl.bindTexture(GL_TEXTURE_2D, depthTexture);
+  // gl.texImage2D(
+  //   gl.TEXTURE_2D,
+  //   0,
+  //   gl.RGBA,
+  //   gl.RGBA,
+  //   gl.UNSIGNED_BYTE,
+  //   document.getElementById("image-depth")
+  // );
+  // gl.bindTexture(gl.TEXTURE_2D, null);
+
   gl.useProgram(program);
 
   gl.clearColor(0.0, 0.0, 0.0, 1.0);
@@ -143,6 +162,9 @@ function canvasInit() {
 
   gl.bindTexture(gl.TEXTURE_2D, texture);
   gl.activeTexture(gl.TEXTURE0);
+
+  // gl.activeTexture(gl.TEXTURE1);
+  // gl.bindTexture(GL_TEXTURE_2D, depthTexture);
 
   gl.drawArrays(gl.TRIANGLES, 0, 6);
   //gl.drawElements(gl.TRIANGLES, 6, gl.UNSIGNED_INT, 0);
