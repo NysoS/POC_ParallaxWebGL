@@ -6,8 +6,20 @@
     <title>Depth Parallax WebGL</title>
   </head>
   <body>
-    <canvas id="glCanvas" width="640" height="480"></canvas>
-    <img id="image" src="./LD_1.png" />
-    <script src="./index.js"></script>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+      }
+    </style>
+    <depth-parallax
+      id="depth-parallax-canvas"
+      simpleTexture="./DepthParallax/original.jpg"
+      depthTexture="./DepthParallax/depth.jpg"
+      moveDistance="60"
+    ></depth-parallax>
+
+    <script type="module" src="./DepthParallax/index.js"></script>
   </body>
 </html>
